@@ -11,25 +11,21 @@ export default class componentName extends Component {
   }
   
   search = (e) => {
-    console.log(this.props.tasks);
     e.preventDefault();
+    let tasks = [];
     if (this.state.searchTerm) {
-      console.log("Searching");
-      let tasks = [];
       for (let day in this.props.tasks) {
-        console.log(day);
         this.props.tasks[day].forEach(task => {
           if (task.description.toLowerCase().includes(this.state.searchTerm.toLowerCase())) {
             tasks.push(task);
           }
         });
       }
-      this.setState({ tasks });
     }
+    this.setState({ tasks });
   }
 
   render() {
-    console.log(this.state.searchTerm);
     return (
       <div>
         <form id="search-form" onSubmit={ this.search }>

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { ENGINE_METHOD_DIGESTS } from 'constants';
 
 export default class componentName extends Component {
   componentDidMount = () => {
@@ -7,14 +6,26 @@ export default class componentName extends Component {
   }
   
   render() {
-    console.log(this.props.tasks)
     return (
       <div className="task-list">
         { 
           this.props.tasks && this.props.tasks.map(task =>
-            <div key={ task._id }>
-              <p>Duration(hh/mm/ss): { task.duration }</p>
-              <h4>{ task.description }</h4>
+            <div key={ task._id } className="task-list-entry">
+              <p>
+                <span>
+                  { task.time } on { task.date }
+                </span>
+                <span>
+                  <img 
+                    className="duration-icon"
+                    draggable="false" 
+                    src={ "https://twemoji.maxcdn.com/2/72x72/1f558.png" }
+                    alt={ "🕘" }
+                  /> 
+                  &nbsp;&nbsp;&nbsp;{ task.duration }
+                </span>
+              </p>
+              <h4>{ task.description ? task.description : "No Description" }</h4>
             </div>
           ) 
         }

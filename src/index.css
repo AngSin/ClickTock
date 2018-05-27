@@ -25,10 +25,39 @@ input {
 .App-title {
   text-align: center;
   font-size: 2em;
+}
+
+.task-list {
+  overflow: hidden;
+}
+
+.task-list-entry{
+  font-size: 12px;
+  width: 90%;
+  margin: 10px 0 10px 5%;
+  box-shadow: 0 0 10px 0 rgb(220,220,220);
   padding: 10px;
 }
 
+.task-list-entry p {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.task-list-entry h4{
+  text-align: center;
+  font-size: 16px;
+}
+
+.duration-icon {
+  position: relative;
+  top: 2px;
+  width: 18px;
+}
+
 .home {
+  padding-top: 4%;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -41,6 +70,11 @@ input {
 .home #home-main {
   flex: 1;
   margin-left: 10%;
+}
+
+.home .home-div:last-of-type {
+  flex: 0.6;
+  margin-right: 3%;
 }
 
 .calendar { 

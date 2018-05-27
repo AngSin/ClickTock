@@ -4,7 +4,8 @@ import { bindActionCreators } from 'redux';
 import Axios from 'axios';
 
 import Calendar from 'rc-calendar';
-import 'rc-calendar/assets/index.css'
+import 'rc-calendar/assets/index.css';
+import Spinner from 'react-spinkit';
 import { ROOT_URL } from '../constants/urls';
 import NewTask from '../components/NewTask';
 import TaskList from '../components/TaskList';
@@ -12,13 +13,10 @@ import SearchComponent from '../components/SearchComponent';
 import { addTask, setTasks } from '../actions/taskActions';
 
 class App extends Component  { 
-  constructor(props) {
-    super(props);
-    this.state = {
-      dateString: ''
-    };
-    this.calendar = React.createRef();
-  }
+  state = {
+    dateString: ''
+  };
+
   componentDidMount = () => {
     const date = new Date();
     this.selectDate(date);
@@ -26,11 +24,13 @@ class App extends Component  {
   }
 
   getTasks = (date) => {
+    this.setState({ loading: true });
     Axios.get(`${ ROOT_URL }/tasks/`)
       .then(res => res.data)
       .then(res => {
         console.log(res);
         this.props.setTasks(res);
+        this.setState({ loading: false });
       });
   }
 
@@ -51,21 +51,37 @@ class App extends Component  {
   
   render() {
     return (
-      <div className="home">
-        <div className="home-div">
-          <Calendar
-            className="calendar"
-            ref={ ref => this.calendar = ref }
-            onSelect={ (e) => this.selectDate(e._d) }
-            showDateInput={ false }
-          />
-        </div>
-        <div className="home-div" id="home-main">
-          <NewTask dateString={ this.state.dateString } setToday={ this.setToday } addTask={ this.props.addTask }/>
-          <TaskList tasks={ this.props.tasks[this.state.dateString] } />
-        </div>
-        <div className="home-div" id="search-component">
-          <SearchComponent tasks={ this.props.tasks }/>
+      <div className="page">
+        <div className="home" style={{ opacity: this.props.loading ? 0 : 1 }}>
+          <div className="home-div">
+            <Calendar
+              className="calendar"
+              ref={ ref => this.calendar = ref }
+              onSelect={ (e) => this.selectDate(e._d) }
+              showDateInput={ false }
+            />
+          </div>
+          <div className="home-div" id="home-main">
+            <NewTask dateString={ this.state.dateString } setToday={ this.setToday } addTask={ this.props.addTask }/>
+            <TaskList tasks={ this.props.tasks[this.state.dateString] } />
+          </div>
+          <div className="home-div" id="search-component">
+            <SearchComponent tasks={ this.props.tasks }/>
+          </div>
+        </div> 
+        <div style={{
+          display: 'flex',
+          backgroundColor:'rgba(0,0,0,0.5)',
+          justifyContent:'center',
+          alignItems:'center',
+          position:'absolute',
+          top:0,
+          bottom: 0,
+          left:0,right:0,
+          opacity: this.props.loading ? 1 : 0,
+          zIndex: this.props.loading ? 10 : -10
+        }}>
+          <Spinner style={{transform: 'scale(4)'}} name={ "ball-grid-pulse" } color={ "rgb(200, 74, 81)" }/>
         </div>
       </div>
     );
