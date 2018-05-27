@@ -31,11 +31,6 @@ input {
   margin-left: 5%;
 }
 
-.task-list {
-  height: 70vh;
-  overflow: auto;
-}
-
 .task-list-entry{
   font-size: 12px;
   margin: 10px 0 10px 2%;
@@ -101,6 +96,7 @@ input {
 #search-results {
   height: 30vh;
   overflow: auto;
+  margin-bottom: 40px;
 }
 
 .booking-entry {

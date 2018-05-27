@@ -5,7 +5,6 @@ import Axios from 'axios';
 
 import Calendar from 'rc-calendar';
 import 'rc-calendar/assets/index.css';
-import Spinner from 'react-spinkit';
 import { ROOT_URL } from '../constants/urls';
 import NewTask from '../components/NewTask';
 import TaskList from '../components/TaskList';
@@ -13,18 +12,28 @@ import SearchComponent from '../components/SearchComponent';
 import BookAppointment from '../components/BookAppointment';
 import { addTask, setTasks } from '../actions/taskActions';
 
-class App extends Component  { 
-  state = {
-    dateString: ''
-  };
+class App extends Component  {
+  constructor(props) {
+    super(props);
+    this.state = {
+      dateString: '',
+      today: ''
+    };
+    this.appointmentHandlers = [];
+  }
 
   componentDidMount = () => {
     const date = new Date();
+    // const datePadding = date.getDate() < 10 ? '0' : '';
+    // const monthPadding = date.getMonth() < 10 ? '0' : '';
+    // const dateString = `${ datePadding }${ date.getDate() }/${ monthPadding }${ date.getMonth() + 1}/${ date.getFullYear() }`
+    // this.setState({ today: dateString });
     this.selectDate(date);
-    this.getTasks();
+    this.getTasks()
+      .then(this.checkAppointments);
   }
 
-  getTasks = (date) => {
+  getTasks = () => new Promise((resolve, reject) => {
     this.setState({ loading: true });
     Axios.get(`${ ROOT_URL }/tasks/`)
       .then(res => res.data)
@@ -32,7 +41,48 @@ class App extends Component  {
         console.log(res);
         this.props.setTasks(res);
         this.setState({ loading: false });
-      });
+        resolve(res);
+      })
+      .catch(err => reject(err));
+  });
+
+  addTask = (dateString, task) => {
+    this.props.addTask(dateString, task);
+    this.checkAppointments();
+  }
+
+  checkAppointments = () => {
+    const today = new Date();
+    const now = today.getTime();
+    const todayString = new Intl.DateTimeFormat('en-GB').format(today);
+    const thisMonth = todayString.substr(3,2);
+    const todayDate = todayString.substr(0, 2);
+    let appointments = [];
+    for (const day in this.props.tasks) {
+      if (
+        day.substr(3,2) > thisMonth ||
+        day.substr(3,2) === thisMonth && day.substr(0,2) >= todayDate
+      ) {
+          appointments = [...appointments, this.props.tasks[day]];
+          this.props.tasks[day].forEach((task) => {
+            const day = task.date.substr(0,2);
+            const month = task.date.substr(3,2);
+            const year = task.date.substr(-4);
+            const hrs = task.time.substr(0,2);
+            const mins = task.time.substr(-2);
+            let date = new Date(year, Number(month) - 1, day, hrs, mins);
+            const period = date.getTime() - now;
+            if (period > 0 && period <= 2147483647) {
+              console.log(date.getTime() - now);
+              let handleAppointment = setTimeout(() => {
+                alert(task.description + "\n is starting now");
+                this.setToday();
+              }, period);
+              this.appointmentHandlers.push(handleAppointment);
+            }
+          });
+      }
+    }
   }
 
   selectDate = (e, isString) => {
@@ -44,7 +94,7 @@ class App extends Component  {
       const date = e;
       const datePadding = date.getDate() < 10 ? '0' : '';
       const monthPadding = date.getMonth() < 10 ? '0' : '';
-      dateString = `${ datePadding }${ date.getDate() }/${ monthPadding }${ date.getMonth() }/${ date.getFullYear() }`
+      dateString = `${ datePadding }${ date.getDate() }/${ monthPadding }${ date.getMonth() + 1}/${ date.getFullYear() }`
     }
     this.setState({ dateString });
   }
@@ -53,7 +103,7 @@ class App extends Component  {
     const date = new Date();
     const datePadding = date.getDate() < 10 ? '0' : '';
     const monthPadding = date.getMonth() < 10 ? '0' : '';
-    const dateString = `${ datePadding }${ date.getDate() }/${ monthPadding }${ date.getMonth() }/${ date.getFullYear() }`
+    const dateString = `${ datePadding }${ date.getDate() }/${ monthPadding }${ date.getMonth() + 1}/${ date.getFullYear() }`
     this.setState({ dateString });
     let selectedValue = this.calendar.state.selectedValue ? this.calendar.state.selectedValue : this.calendar.state.value;
     selectedValue._d = date;
@@ -74,28 +124,14 @@ class App extends Component  {
             />
           </div>
           <div className="home-div" id="home-main">
-            <NewTask dateString={ this.state.dateString } setToday={ this.setToday } addTask={ this.props.addTask }/>
+            <NewTask dateString={ this.state.dateString } setToday={ this.setToday } addTask={ this.addTask }/>
             <TaskList tasks={ this.props.tasks[this.state.dateString] } />
           </div>
           <div className="home-div">
             <SearchComponent selectDate={ this.selectDate } tasks={ this.props.tasks }/>
-            <BookAppointment />
+            <BookAppointment addTask={ this.addTask }/>
           </div>
-        </div> 
-        {/* <div style={{
-          display: 'flex',
-          backgroundColor:'rgba(0,0,0,0.5)',
-          justifyContent:'center',
-          alignItems:'center',
-          position:'absolute',
-          top:0,
-          bottom: 0,
-          left:0,right:0,
-          opacity: this.props.loading ? 1 : 0,
-          zIndex: this.props.loading ? 10 : -10
-        }}>
-          <Spinner style={{transform: 'scale(4)'}} name={ "ball-grid-pulse" } color={ "rgb(200, 74, 81)" }/>
-        </div> */}
+        </div>
       </div>
     );
   }

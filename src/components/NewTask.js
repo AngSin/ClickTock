@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Axios from 'axios';
 import { ROOT_URL } from '../constants/urls';
 
-export default class AddTask extends Component {
+export default class NewTask extends Component {
   state = {
     seconds: '00',
     minutes: '00',
@@ -77,7 +77,7 @@ export default class AddTask extends Component {
     const date = new Date();
     const datePadding = date.getDate() < 10 ? '0' : '';
     const monthPadding = date.getMonth() < 10 ? '0' : '';
-    const dateString = `${ datePadding }${ date.getDate() }/${ monthPadding }${ date.getMonth() }/${ date.getFullYear() }`
+    const dateString = `${ datePadding }${ date.getDate() }/${ monthPadding }${ date.getMonth() + 1}/${ date.getFullYear() }`
     Axios.post(url, data)
       .then(res => res.data)
       .then(res => this.props.addTask(dateString, res.createdTask))

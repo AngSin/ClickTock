@@ -4,7 +4,10 @@ export default function(state = {}, action) {
   let newState = {...state};
   switch(action.type) {
     case ADD_TASK: {
-      newState[action.dateString].push(action.payload);
+      if (newState[action.dateString])
+        newState[action.dateString].push(action.payload);
+      else newState[action.dateString] = [action.payload];
+      
       return newState;
     }
     case SET_TASKS: {

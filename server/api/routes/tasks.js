@@ -21,7 +21,7 @@ router.get('/', (req, res, next) => {
 router.post('/', (req, res, next) => {
   const today = new Date();
   const date = today.getDate();
-  const month = today.getMonth();
+  const month = today.getMonth() + 1;
   const datePadding = date < 10 ? '0' : '';
   const monthPadding = month < 10 ? '0' : '';
   const hours = today.getHours();
@@ -47,6 +47,25 @@ router.post('/', (req, res, next) => {
     .catch(err => { 
       console.log(err);
       res.status(500).json({ error: err});
+    });
+});
+
+router.post('/appointments/', (req, res, next) => {
+  let appointment = req.body;
+  appointment._id = new mongoose.Types.ObjectId();
+  appointment = new Task(appointment);
+  appointment
+    .save()
+    .then(result => {
+      console.log(result);
+      res.status(201).json({
+        message: "Appointment created",
+        createdAppointment: appointment
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({ error: err });
     });
 });
 

@@ -1,5 +1,6 @@
 export const ADD_TASK = "ADD_TASK";
 export const SET_TASKS = "SET_TASKS";
+export const SET_APPOINTMENTS = "SET_APPOINTMENTS";
 
 export const addTask = (dateString, task) => {
   console.log(dateString);
