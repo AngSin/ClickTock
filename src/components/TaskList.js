@@ -10,7 +10,7 @@ export default class componentName extends Component {
       <div className="task-list">
         { 
           this.props.tasks && this.props.tasks.map(task =>
-            <div key={ task._id } className="task-list-entry">
+            <div key={ task._id } className="task-list-entry log">
               <p>
                 <span>
                   { task.time } on { task.date }

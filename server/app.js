@@ -3,7 +3,9 @@ const app = express();
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+
 const taskRouter = require('./api/routes/tasks');
+const appointmentRouter = require('./api/routes/appointments');
 
 mongoose.connect("mongodb://admin:angad@clicktock-shard-00-00-2c1tt.mongodb.net:27017,clicktock-shard-00-01-2c1tt.mongodb.net:27017,clicktock-shard-00-02-2c1tt.mongodb.net:27017/test?ssl=true&replicaSet=ClickTock-shard-0&authSource=admin&retryWrites=true")
 
@@ -25,6 +27,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/tasks', taskRouter);
+app.use('/appointments', appointmentRouter);
 
 app.use((req, res, next) => {
   const err = new Error("Not found");

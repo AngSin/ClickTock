@@ -5,10 +5,6 @@ export default class componentName extends Component {
     tasks: [],
     searchTerm: ''
   };
-
-  componentDidMount = () => {
-    
-  }
   
   search = (e) => {
     e.preventDefault();
@@ -27,7 +23,7 @@ export default class componentName extends Component {
 
   render() {
     return (
-      <div>
+      <div id="search-component">
         <form id="search-form" onSubmit={ this.search }>
           <input
             type="text"
@@ -35,15 +31,25 @@ export default class componentName extends Component {
             onChange={ e => this.setState({ searchTerm: e.target.value.trim() }) }
           />
         </form>
-        {
-          this.state.tasks.map(task =>
-            <div key={ task._id }>
-              {
-                task.description
-              }
-            </div>
-          )
-        }
+        <div id="search-results">
+          {
+            this.state.tasks.length > 0 ?
+              this.state.tasks.map(task =>
+                <div
+                  key={ task._id } 
+                  className="task-list-entry"
+                  onClick={ () =>  this.props.selectDate(task.date, true) }
+                  style={{ cursor: 'pointer' }}
+                >
+                  {
+                    task.description
+                  }
+                </div>
+              )
+                :
+            <p style={{ textAlign: 'center', fontSize: 16 }}>—</p>
+          }
+        </div>
       </div>
     );
   }

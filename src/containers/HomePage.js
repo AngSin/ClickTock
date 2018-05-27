@@ -10,6 +10,7 @@ import { ROOT_URL } from '../constants/urls';
 import NewTask from '../components/NewTask';
 import TaskList from '../components/TaskList';
 import SearchComponent from '../components/SearchComponent';
+import BookAppointment from '../components/BookAppointment';
 import { addTask, setTasks } from '../actions/taskActions';
 
 class App extends Component  { 
@@ -34,16 +35,26 @@ class App extends Component  {
       });
   }
 
-  selectDate = (e) => {
-    const date = e;
-    const datePadding = date.getDate() < 10 ? '0' : '';
-    const monthPadding = date.getMonth() < 10 ? '0' : '';
-    const dateString = `${ datePadding }${ date.getDate() }/${ monthPadding }${ date.getMonth() }/${ date.getFullYear() }`
+  selectDate = (e, isString) => {
+    let dateString;
+    if (isString) {
+      dateString = e;
+    }
+    else {
+      const date = e;
+      const datePadding = date.getDate() < 10 ? '0' : '';
+      const monthPadding = date.getMonth() < 10 ? '0' : '';
+      dateString = `${ datePadding }${ date.getDate() }/${ monthPadding }${ date.getMonth() }/${ date.getFullYear() }`
+    }
     this.setState({ dateString });
   }
 
   setToday = () => {
     const date = new Date();
+    const datePadding = date.getDate() < 10 ? '0' : '';
+    const monthPadding = date.getMonth() < 10 ? '0' : '';
+    const dateString = `${ datePadding }${ date.getDate() }/${ monthPadding }${ date.getMonth() }/${ date.getFullYear() }`
+    this.setState({ dateString });
     let selectedValue = this.calendar.state.selectedValue ? this.calendar.state.selectedValue : this.calendar.state.value;
     selectedValue._d = date;
     this.calendar.setState({ selectedValue });
@@ -59,17 +70,19 @@ class App extends Component  {
               ref={ ref => this.calendar = ref }
               onSelect={ (e) => this.selectDate(e._d) }
               showDateInput={ false }
+              showToday={ false }
             />
           </div>
           <div className="home-div" id="home-main">
             <NewTask dateString={ this.state.dateString } setToday={ this.setToday } addTask={ this.props.addTask }/>
             <TaskList tasks={ this.props.tasks[this.state.dateString] } />
           </div>
-          <div className="home-div" id="search-component">
-            <SearchComponent tasks={ this.props.tasks }/>
+          <div className="home-div">
+            <SearchComponent selectDate={ this.selectDate } tasks={ this.props.tasks }/>
+            <BookAppointment />
           </div>
         </div> 
-        <div style={{
+        {/* <div style={{
           display: 'flex',
           backgroundColor:'rgba(0,0,0,0.5)',
           justifyContent:'center',
@@ -82,7 +95,7 @@ class App extends Component  {
           zIndex: this.props.loading ? 10 : -10
         }}>
           <Spinner style={{transform: 'scale(4)'}} name={ "ball-grid-pulse" } color={ "rgb(200, 74, 81)" }/>
-        </div>
+        </div> */}
       </div>
     );
   }

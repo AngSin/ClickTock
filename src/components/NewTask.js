@@ -111,6 +111,7 @@ export default class AddTask extends Component {
             Add
           </button>
         </p>
+        <p style={{ textAlign: 'center', color: 'rgb(160,160,160)' }}>{ this.props.dateString }</p>
       </div>
     );
   }
