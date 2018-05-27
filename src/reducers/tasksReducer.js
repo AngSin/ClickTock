@@ -1,10 +1,14 @@
-import { ADD_TASK } from "../actions/taskActions";
+import { ADD_TASK, SET_TASKS } from "../actions/taskActions";
 
 export default function(state = [], action) {
   let newState = [...state];
   switch(action.type) {
     case ADD_TASK: {
-      return action.payload.data;
+      newState.push(action.payload);
+      return newState;
+    }
+    case SET_TASKS: {
+      return action.payload;
     }
     default:
       return newState;

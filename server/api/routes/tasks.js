@@ -21,18 +21,28 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
+  const today = new Date();
+  const date = today.getDate();
+  const month = today.getMonth();
+  const datePadding = date < 10 ? '0' : '';
+  const monthPadding = month < 10 ? '0' : '';
+  const hours = today.getHours();
+  const minutes = today.getMinutes();
+  const hoursPadding = hours < 10 ? '0' : '';
+  const minutesPadding = minutes < 10 ? '0' : '';
   const task = new Task({
     _id: new mongoose.Types.ObjectId(),
     duration: req.body.duration,
     description: req.body.description,
-    date: new Date()
+    date: `${ datePadding }${ date }/${ monthPadding }${ month }/${ today.getFullYear() }`,
+    time: `${hoursPadding}${hours}:${minutesPadding}${minutes}`
   });
   task
     .save()
     .then(result => {
       console.log(result);
       res.status(201).json({
-        message: "Handling POST requests to /products",
+        message: "Task added",
         createdTask: task
       });
     })
@@ -42,26 +52,41 @@ router.post('/', (req, res, next) => {
     });
 });
 
-router.get('/:taskId', (req, res, next) => {
-  const id = req.params.taskId;
-  Task.findById(id)
+router.get('/:date', (req, res, next) => {
+  const dateNum = req.params.date;
+  const date = dateNum.substr(0,2) + "/" + dateNum.substr(2,2) + "/" + dateNum.substr(-4);
+  Task.find({ date })
     .exec()
     .then(doc => { 
       console.log("From database ", doc);
-      if (doc) {
-        res.status(200).json(doc);
-      }
-      else {
-        res.status(404).json({
-          message: "No valid entry found for provided id"
-        });
-      }
+      res.status(200).json(doc);
     })
     .catch(err => {
       console.log(err);
       res.status(500).json({ error: err });
     })
 });
+
+// router.get('/:taskId', (req, res, next) => {
+//   const id = req.params.taskId;
+//   Task.findById(id)
+//     .exec()
+//     .then(doc => { 
+//       console.log("From database ", doc);
+//       if (doc) {
+//         res.status(200).json(doc);
+//       }
+//       else {
+//         res.status(404).json({
+//           message: "No valid entry found for provided id"
+//         });
+//       }
+//     })
+//     .catch(err => {
+//       console.log(err);
+//       res.status(500).json({ error: err });
+//     })
+// });
 
 router.patch('/:taskId', (req, res, next) => {
   const id = req.params.taskId;

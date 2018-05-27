@@ -1,25 +1,10 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import React from 'react';
 
 import Header from './components/Header';
-import NewTask from './components/NewTask';
-import { addTask } from './actions/taskActions';
+import HomePage from './containers/HomePage';
 
-const App = (props) => 
+export default () => 
   <div className="App">
     <Header />
-    <NewTask addTask={ props.addTask }/>
+    <HomePage />
   </div>
-
-function mapStateToProps(state) {
-  return {
-
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ addTask }, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);

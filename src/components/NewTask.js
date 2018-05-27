@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import Axios from 'axios';
+import { ROOT_URL } from '../constants/urls';
 
 export default class AddTask extends Component {
   state = {
@@ -65,13 +67,19 @@ export default class AddTask extends Component {
 
   addTask = () => {
     clearInterval(this.ticker);
+    const data = {
+      duration: this.state.hours + ":" + this.state.minutes + ":" + this.state.seconds,
+      description: this.state.description
+    }
+    const url = `${ROOT_URL}/tasks`
+    Axios.post(url, data)
+      .then(res => res.data)
+      .then(res => this.props.addTask(res.createdTask))
+      .catch(err => alert(err));
+
     if (!this.state.description) {
       
     }
-    this.props.addTask({
-      duration: this.state.hours + ":" + this.state.minutes + ":" + this.state.seconds,
-      description: this.state.description
-    });
   }
 
   render() {
