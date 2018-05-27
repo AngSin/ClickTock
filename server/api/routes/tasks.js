@@ -64,29 +64,8 @@ router.get('/:date', (req, res, next) => {
     .catch(err => {
       console.log(err);
       res.status(500).json({ error: err });
-    })
+    });
 });
-
-// router.get('/:taskId', (req, res, next) => {
-//   const id = req.params.taskId;
-//   Task.findById(id)
-//     .exec()
-//     .then(doc => { 
-//       console.log("From database ", doc);
-//       if (doc) {
-//         res.status(200).json(doc);
-//       }
-//       else {
-//         res.status(404).json({
-//           message: "No valid entry found for provided id"
-//         });
-//       }
-//     })
-//     .catch(err => {
-//       console.log(err);
-//       res.status(500).json({ error: err });
-//     })
-// });
 
 router.patch('/:taskId', (req, res, next) => {
   const id = req.params.taskId;

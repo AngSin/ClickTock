@@ -33,3 +33,16 @@ input {
   flex-direction: row;
   justify-content: flex-start;
 }
+
+.home .home-div {
+  margin-left: 5%;
+}
+
+.home #home-main {
+  flex: 1;
+  margin-left: 10%;
+}
+
+.calendar { 
+  cursor: default;
+}

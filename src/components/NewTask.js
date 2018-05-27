@@ -12,6 +12,7 @@ export default class AddTask extends Component {
   };
 
   startTimer = () => {
+    this.props.setToday();
     const { started } = this.state;
     this.setState({ started: !started });
     if (!started) {
@@ -66,15 +67,20 @@ export default class AddTask extends Component {
   }
 
   addTask = () => {
+    this.props.setToday();
     clearInterval(this.ticker);
     const data = {
       duration: this.state.hours + ":" + this.state.minutes + ":" + this.state.seconds,
       description: this.state.description
     }
-    const url = `${ROOT_URL}/tasks`
+    const url = `${ROOT_URL}/tasks`;
+    const date = new Date();
+    const datePadding = date.getDate() < 10 ? '0' : '';
+    const monthPadding = date.getMonth() < 10 ? '0' : '';
+    const dateString = `${ datePadding }${ date.getDate() }/${ monthPadding }${ date.getMonth() }/${ date.getFullYear() }`
     Axios.post(url, data)
       .then(res => res.data)
-      .then(res => this.props.addTask(res.createdTask))
+      .then(res => this.props.addTask(dateString, res.createdTask))
       .catch(err => alert(err));
 
     if (!this.state.description) {
