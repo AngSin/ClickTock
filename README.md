@@ -1,4 +1,4 @@
-To recreate, after cloning, in the project directory, run:
+To recreate after cloning, in the project directory, run:
 
 ```
     npm install
