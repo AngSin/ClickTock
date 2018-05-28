@@ -27,7 +27,7 @@ export default class componentName extends Component {
         <form id="search-form" onSubmit={ this.search }>
           <input
             type="text"
-            placeholder="Search logs"
+            placeholder="Search logs 🔍"
             onChange={ e => this.setState({ searchTerm: e.target.value.trim() }) }
           />
         </form>

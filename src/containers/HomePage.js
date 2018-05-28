@@ -17,7 +17,8 @@ class App extends Component  {
     super(props);
     this.state = {
       dateString: '',
-      today: ''
+      today: '',
+      clearTimer: false
     };
     this.appointmentHandlers = [];
   }
@@ -75,8 +76,9 @@ class App extends Component  {
             if (period > 0 && period <= 2147483647) {
               console.log(date.getTime() - now);
               let handleAppointment = setTimeout(() => {
-                alert(task.description + "\n is starting now");
+                alert(task.description + " is starting now!");
                 this.setToday();
+                this.setState({ clearTimer: true }, () => this.setState({ clearTimer: false }));
               }, period);
               this.appointmentHandlers.push(handleAppointment);
             }
@@ -124,7 +126,12 @@ class App extends Component  {
             />
           </div>
           <div className="home-div" id="home-main">
-            <NewTask dateString={ this.state.dateString } setToday={ this.setToday } addTask={ this.addTask }/>
+            <NewTask 
+              clearTimer={ this.state.clearTimer } 
+              dateString={ this.state.dateString } 
+              setToday={ this.setToday } 
+              addTask={ this.addTask }
+            />
             <TaskList tasks={ this.props.tasks[this.state.dateString] } />
           </div>
           <div className="home-div">

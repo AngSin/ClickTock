@@ -28,7 +28,14 @@ input {
 }
 
 #time-tracker {
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 0 10px 0 rgb(70,70,70);
   margin-left: 5%;
+}
+
+#time-tracker input {
+  text-align: center;
 }
 
 .task-list-entry{
@@ -112,17 +119,18 @@ input {
   text-align: center;
 }
 
-#booking-submit-btn {
+.add-button {
   background-color: rgb(71, 200, 91);
   text-align: center;
+  color: rgba(0,0,0,0.6);
+  border: 0;
+  font-weight: bold;
 }
 
 #booking-submit-btn {
   border: 0;
   width: 100%;
   font-size: 32px;
-  font-weight: bolder;
   margin-top: 14%;
   box-shadow: 0 0 10px 0 rgb(100,100,100);
-  color: rgba(0,0,0,0.6);
 }

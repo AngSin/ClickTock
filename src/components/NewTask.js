@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import Axios from 'axios';
 import { ROOT_URL } from '../constants/urls';
 
+let ticker;
+
 export default class NewTask extends Component {
   state = {
     seconds: '00',
@@ -19,12 +21,25 @@ export default class NewTask extends Component {
       this.tick();
     }
     else {
-      clearInterval(this.ticker);
+      clearInterval(ticker);
     }
   }
 
+  static getDerivedStateFromProps = (nextProps, prevState) => {
+    if (nextProps.clearTimer) {
+      clearInterval(ticker);
+      return { seconds: '00', minutes: '00', hours: '00', started: false };
+    }
+    return prevState;
+  }
+
+  reset = () => {
+    clearInterval(ticker);
+    this.setState({ seconds: '00', minutes: '00', hours: '00', started: false });
+  }
+
   tick = () => {
-    this.ticker = setInterval(() => {
+    ticker = setInterval(() => {
       if (Number(this.state.seconds) < 9) {
         const seconds = Number(this.state.seconds);
         this.setState({ seconds: '0' + (seconds + 1) })
@@ -68,7 +83,7 @@ export default class NewTask extends Component {
 
   addTask = () => {
     this.props.setToday();
-    clearInterval(this.ticker);
+    clearInterval(ticker);
     const data = {
       duration: this.state.hours + ":" + this.state.minutes + ":" + this.state.seconds,
       description: this.state.description
@@ -91,7 +106,8 @@ export default class NewTask extends Component {
   render() {
     return (
       <div id="time-tracker">
-        <p>
+        <h2>Track Time</h2>
+        <p style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
           <input 
             type="text" 
             value={ this.state.hours + ":" + this.state.minutes + ":" + this.state.seconds }
@@ -101,13 +117,21 @@ export default class NewTask extends Component {
             type="text" 
             value={ this.state.description }
             onChange={ e => this.setState({ description: e.target.value })}
+            placeholder={ "Description of task" }
           />
         </p>
-        <p>
-          <button onClick={ this.startTimer }>
-            { this.state.started ? "Stop!" : "Start Clockin'" }
-          </button>
-          <button onClick={ this.addTask }>
+        <p style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
+          { this.state.started ? 
+              <span onClick={ this.reset } style={{ cursor: "pointer", padding: 0, fontSize: '32px' }}>
+                ⏹️
+              </span>
+                :
+              null
+          }
+          <span onClick={ this.startTimer } style={{ cursor: "pointer", padding: 0, fontSize: '32px' }}>
+            { this.state.started ? "⏸️" : "▶️" }
+          </span>
+          <button className={ "add-button" } style={{ borderRadius: 10, paddingRight: 8, paddingLeft: 8 }} onClick={ this.addTask }>
             Add
           </button>
         </p>

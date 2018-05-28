@@ -4,11 +4,13 @@ import { ROOT_URL } from '../constants/urls';
 
 export default class BookAppointment extends Component {
   state = {
-    date: '',
-    hrs: '',
-    mins: '',
-    description: '',
+    date: ' ',
+    hrs: ' ',
+    mins: ' ',
+    description: ' ',
+    today: new Date()
   };
+  
 
   submit = (e) => {
     e.preventDefault();
@@ -23,7 +25,7 @@ export default class BookAppointment extends Component {
       time: `${hrsPadding}${hrs}:${minsPadding}${mins}`,
       date: dateString,
       description,
-      duration: "00:00:00"
+      duration: "Booked Appointment"
     };
 
     Axios.post(`${ROOT_URL}/tasks/appointments/`, appointment)
@@ -32,10 +34,10 @@ export default class BookAppointment extends Component {
         console.log(res);
         this.props.addTask(dateString, appointment);
         this.setState({ 
-          date: '',
-          hrs: 0,
-          mins: 0,
-          description: '',
+          date: ' ',
+          hrs: ' ',
+          mins: ' ',
+          description: ' ',
         });
       })
       .catch(err => console.log(err));
@@ -52,6 +54,7 @@ export default class BookAppointment extends Component {
             min="0" max="23" 
             onChange={ e => this.setState({ hrs: e.target.value }) }
             value={ this.state.hrs }
+            required
           />
           <input 
             type="number" 
@@ -59,22 +62,34 @@ export default class BookAppointment extends Component {
             min="0" max="59" 
             onChange={ e => this.setState({ mins: e.target.value }) }
             value={ this.state.mins }
+            required
           />
         </p>
         <p className="booking-entry">
           Date:&nbsp;&nbsp;
           <input 
             type="date" 
-            min="2018-05-27" 
+            min={ 
+              this.state.today.getFullYear() + "-" + (this.state.today.getMonth() + 1 < 10 ? "0" : "") 
+              + (this.state.today.getMonth() + 1) + "-" + (this.state.today.getDate() < 10 ? "0" : "")
+              + this.state.today.getDate()
+            }
             onChange={ e => this.setState({ date: e.target.value }) }
-            value={ this.state.value }
+            value={ this.state.date }
+            required
           />
         </p>
         <p className="booking-entry">
           Description:&nbsp;&nbsp;
-          <input type="text" placeholder="Description of the appointment" onChange={ e => this.setState({ description: e.target.value }) }/>
+          <input 
+            type="text" 
+            placeholder="Description of the appointment" 
+            onChange={ e => this.setState({ description: e.target.value }) }
+            value={ this.state.description }
+            required
+          />
         </p>
-        <input type="submit" className="task-list-entry" id="booking-submit-btn" value="Book Appointment"/>
+        <input type="submit" className="task-list-entry add-button" id="booking-submit-btn" value="Book Appointment"/>
       </form>
     );
   }
