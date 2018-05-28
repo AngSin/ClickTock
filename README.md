@@ -5,7 +5,7 @@ To recreate, after cloning, in the project directory, run:
     npm start
 ```
 
-Took me ~ 12 hours on this enjoyable project. It came out fairly well in the time frame, all mandatory and otherwise requirements met. What is clearly lacking though is a distinction between a booking and previous time log in the daily log list. Also, right now you can make an appointment in the past - which is a bug!
+Took me ~ 12 hours on this enjoyable project. It came out fairly well in the time frame, all mandatory and otherwise requirements met. What is clearly lacking though is a distinction between a booking and previous time log in the daily log list. Also, right now you can make an appointment in the past (earlier in the same day) - which is a bug!
 
 Future improvements I will make with more time:
 
